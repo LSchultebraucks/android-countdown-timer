@@ -1,27 +1,34 @@
 package com.schultebraucks.lasse.countdowntimer;
 
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    private static final long START_TIME_IN_MILLIS = 20 * 60 * 1000; // 20 minutes
-
     private Button mButtonStartStop;
     private Button mButtonSubtractTime;
     private Button mButtonReset;
-    private TextView mEditTextTimer;
+    private EditText mEditTextMinutes;
+    private EditText mEditTextSeconds;
 
     private CountDownTimer mCountDownTimer;
 
     private boolean mTimerRunning;
 
-    private long mTimeLeftInMillis = START_TIME_IN_MILLIS;
+    private Ringtone alarmRingtone;
+
+    private long mStartTime = 1000 * 60 * 20;
+
+    private long mTimeLeftInMillis = mStartTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +38,12 @@ public class MainActivity extends AppCompatActivity {
         mButtonStartStop = findViewById(R.id.buttonStartStop);
         mButtonSubtractTime = findViewById(R.id.buttonSubtractTime);
         mButtonReset = findViewById(R.id.buttonReset);
-        mEditTextTimer = findViewById(R.id.textTimer);
+        mEditTextMinutes = findViewById(R.id.editTextMinutes);
+        mEditTextSeconds = findViewById(R.id.editTextSeconds);
+
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        this.alarmRingtone = RingtoneManager.getRingtone(getApplicationContext(), notification);
+
 
         mButtonStartStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,12 +66,21 @@ public class MainActivity extends AppCompatActivity {
         mButtonReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pauseTimer();
                 resetTimer();
+                alarmRingtone.stop();
+                mButtonReset.setText("Reset");
             }
         });
+
+        updateCountDownText();
     }
 
     private void startTimer()  {
+        mTimeLeftInMillis = 0;
+        mTimeLeftInMillis += Integer.parseInt(mEditTextMinutes.getText().toString()) * 1000 * 60;
+        mTimeLeftInMillis += Integer.parseInt(mEditTextSeconds.getText().toString()) * 1000;
+
         createTimer(mTimeLeftInMillis);
         mButtonStartStop.setText("Stop");
         mTimerRunning = true;
@@ -79,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                mEditTextTimer.setText("Time is up");
+                alarmRingtone.play();
+                Toast.makeText(getApplicationContext(), "Time is up", Toast.LENGTH_SHORT).show();
+                mButtonReset.setText("Stop alarm & Reset");
                 mTimerRunning = false;
                 mButtonStartStop.setText("Start");
             }
@@ -96,16 +119,18 @@ public class MainActivity extends AppCompatActivity {
         int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
         int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
 
-        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        String minutesText = String.format(Locale.getDefault(), "%02d", minutes);
+        String secondsText = String.format(Locale.getDefault(), "%02d", seconds);
 
-        mEditTextTimer.setText(timeLeftFormatted);
+        mEditTextMinutes.setText(minutesText);
+        mEditTextSeconds.setText(secondsText);
     }
 
     private void resetTimer() {
         if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
         }
-        mTimeLeftInMillis = START_TIME_IN_MILLIS;
+        mTimeLeftInMillis = mStartTime;
         mButtonStartStop.setText("Start");
         updateCountDownText();
     }
@@ -113,6 +138,10 @@ public class MainActivity extends AppCompatActivity {
     private void subtractTimeFromTimer() {
         long oneMinute = 60 * 1000;
         mTimeLeftInMillis -= oneMinute;
+        if (mTimeLeftInMillis < 0) {
+            mTimeLeftInMillis = 0;
+            updateCountDownText();
+        }
         createTimer(mTimeLeftInMillis);
     }
 

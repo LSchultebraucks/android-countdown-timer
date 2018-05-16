@@ -22,26 +22,57 @@
             android:id="@+id/buttonStartStop"
             android:textAllCaps="false"
             tools:layout_editor_absoluteX="50dp"
-            android:layout_marginTop="113dp"
-            android:layout_alignTop="@+id/textTimer" android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" android:layout_marginLeft="76dp" android:layout_marginStart="76dp"/>
-    <TextView
-            android:text="20:00"
-            android:textSize="20pt"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:layout_height="51dp"
-            android:id="@+id/textTimer" tools:layout_editor_absoluteX="126dp"
-            android:layout_marginTop="110dp"
-            android:layout_alignParentTop="true" android:layout_centerHorizontal="true"/>
+            android:layout_marginTop="153dp"
+            android:layout_marginLeft="74dp" android:layout_marginStart="74dp" android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true" android:layout_alignParentStart="true"/>
+
     <Button
             android:text="Reset"
             android:textAllCaps="false"
             android:id="@+id/buttonReset"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_below="@+id/buttonStartStop"
-            android:layout_alignLeft="@+id/buttonStartStop" android:layout_alignStart="@+id/buttonStartStop"
-            android:layout_marginTop="19dp"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonStartStop" android:layout_alignLeft="@+id/buttonStartStop"
+            android:layout_alignStart="@+id/buttonStartStop" android:layout_marginTop="13dp"/>
+
+    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_above="@+id/buttonSubtractTime" android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true" android:layout_marginBottom="35dp">
+        <EditText
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="00"
+                android:hint="mm"
+                android:gravity="center"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/editTextMinutes"
+                android:layout_alignBottom="@+id/hour_minute_seperator"
+                android:layout_toLeftOf="@+id/hour_minute_seperator"
+                android:layout_toStartOf="@+id/hour_minute_seperator"/>
+        <TextView
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:text=":"
+                android:gravity="center"
+                android:textSize="16pt"
+                android:ems="10"
+                android:id="@+id/hour_minute_seperator" android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"/>
+        <EditText
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:text="00"
+                android:hint="ss"
+                android:gravity="center"
+                android:ems="10"
+                android:id="@+id/editTextSeconds"
+                android:layout_alignParentTop="true" android:layout_toRightOf="@+id/hour_minute_seperator"
+                android:layout_toEndOf="@+id/hour_minute_seperator"/>
+    </RelativeLayout>
+
+
 
 
 </android.widget.RelativeLayout>
