@@ -110,7 +110,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void pauseTimer() {
-        mCountDownTimer.cancel();
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
         mTimerRunning = false;
         mButtonStartStop.setText("Resume");
     }
